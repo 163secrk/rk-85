@@ -6,6 +6,7 @@ import com.realestate.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +41,12 @@ public class PropertyController {
     }
 
     @PostMapping
-    public Result<Property> add(@RequestBody Property property) {
+    public Result<Property> add(@Valid @RequestBody Property property) {
         return Result.success("添加成功", propertyService.save(property));
     }
 
     @PutMapping
-    public Result<Property> update(@RequestBody Property property) {
+    public Result<Property> update(@Valid @RequestBody Property property) {
         return Result.success("更新成功", propertyService.update(property));
     }
 

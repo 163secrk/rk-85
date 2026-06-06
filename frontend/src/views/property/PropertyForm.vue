@@ -21,7 +21,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-form-item label="房源类型">
+            <el-form-item label="房源类型" prop="type">
               <el-select v-model="form.type" placeholder="请选择类型">
                 <el-option label="住宅" value="住宅"></el-option>
                 <el-option label="公寓" value="公寓"></el-option>
@@ -31,34 +31,34 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="面积(㎡)">
+            <el-form-item label="面积(㎡)" prop="area">
               <el-input v-model="form.area" placeholder="请输入面积"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="朝向">
+            <el-form-item label="朝向" prop="orientation">
               <el-input v-model="form.orientation" placeholder="如：南北通透"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="室">
+            <el-form-item label="室" prop="rooms">
               <el-input-number v-model="form.rooms" :min="1" :max="10"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="厅">
+            <el-form-item label="厅" prop="halls">
               <el-input-number v-model="form.halls" :min="0" :max="5"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="卫">
+            <el-form-item label="卫" prop="bathrooms">
               <el-input-number v-model="form.bathrooms" :min="0" :max="5"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="楼层">
+            <el-form-item label="楼层" prop="floor">
               <el-input v-model="form.floor" placeholder="如：5/28"></el-input>
             </el-form-item>
           </el-col>
@@ -70,12 +70,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="单价(元/㎡)">
+            <el-form-item label="单价(元/㎡)" prop="unitPrice">
               <el-input-number v-model="form.unitPrice" :min="0" :precision="2" style="width: 100%"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="装修">
+            <el-form-item label="装修" prop="decoration">
               <el-select v-model="form.decoration" placeholder="请选择装修">
                 <el-option label="毛坯" value="毛坯"></el-option>
                 <el-option label="简装" value="简装"></el-option>
@@ -87,17 +87,17 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-form-item label="城市">
+            <el-form-item label="城市" prop="city">
               <el-input v-model="form.city" placeholder="请输入城市"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="区域">
+            <el-form-item label="区域" prop="district">
               <el-input v-model="form.district" placeholder="请输入区域"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="状态">
+            <el-form-item label="状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择状态">
                 <el-option label="在售" value="在售"></el-option>
                 <el-option label="已售" value="已售"></el-option>
@@ -106,7 +106,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="详细地址">
+        <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址"></el-input>
         </el-form-item>
         <el-form-item label="房源描述">
@@ -172,7 +172,20 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入房源名称', trigger: 'blur' }],
         propertyNo: [{ required: true, message: '请输入房源编号', trigger: 'blur' }],
-        price: [{ required: true, message: '请输入总价', trigger: 'blur' }]
+        type: [{ required: true, message: '请选择房源类型', trigger: 'change' }],
+        area: [{ required: true, message: '请输入面积', trigger: 'blur' }],
+        orientation: [{ required: true, message: '请输入朝向', trigger: 'blur' }],
+        rooms: [{ required: true, message: '请输入室数', trigger: 'blur' }],
+        halls: [{ required: true, message: '请输入厅数', trigger: 'blur' }],
+        bathrooms: [{ required: true, message: '请输入卫数', trigger: 'blur' }],
+        floor: [{ required: true, message: '请输入楼层', trigger: 'blur' }],
+        price: [{ required: true, message: '请输入总价', trigger: 'blur' }],
+        unitPrice: [{ required: true, message: '请输入单价', trigger: 'blur' }],
+        decoration: [{ required: true, message: '请选择装修', trigger: 'change' }],
+        city: [{ required: true, message: '请输入城市', trigger: 'blur' }],
+        district: [{ required: true, message: '请输入区域', trigger: 'blur' }],
+        address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }]
       }
     }
   },

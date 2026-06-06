@@ -4,8 +4,10 @@ import com.realestate.common.Result;
 import com.realestate.entity.Customer;
 import com.realestate.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +38,12 @@ public class CustomerController {
     }
 
     @PostMapping
-    public Result<Customer> add(@RequestBody Customer customer) {
+    public Result<Customer> add(@Valid @RequestBody Customer customer) {
         return Result.success("添加成功", customerService.save(customer));
     }
 
     @PutMapping
-    public Result<Customer> update(@RequestBody Customer customer) {
+    public Result<Customer> update(@Valid @RequestBody Customer customer) {
         return Result.success("更新成功", customerService.update(customer));
     }
 

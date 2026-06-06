@@ -39,7 +39,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="下次跟进时间">
+            <el-form-item label="下次跟进时间" prop="nextFollowTime">
               <el-date-picker
                 v-model="form.nextFollowTime"
                 type="datetime"
@@ -50,7 +50,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="经纪人">
+        <el-form-item label="经纪人" prop="agentName">
           <el-input v-model="form.agentName" placeholder="请输入经纪人姓名"></el-input>
         </el-form-item>
         <el-form-item label="跟进内容" prop="followContent">
@@ -99,7 +99,9 @@ export default {
         customerId: [{ required: true, message: '请选择客户', trigger: 'change' }],
         followType: [{ required: true, message: '请选择跟进方式', trigger: 'change' }],
         followTime: [{ required: true, message: '请选择跟进时间', trigger: 'change' }],
-        followContent: [{ required: true, message: '请输入跟进内容', trigger: 'blur' }]
+        followContent: [{ required: true, message: '请输入跟进内容', trigger: 'blur' }],
+        agentName: [{ required: true, message: '请输入经纪人姓名', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }]
       }
     }
   },

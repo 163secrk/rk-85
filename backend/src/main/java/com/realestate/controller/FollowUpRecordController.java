@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,12 +45,12 @@ public class FollowUpRecordController {
     }
 
     @PostMapping
-    public Result<FollowUpRecord> add(@RequestBody FollowUpRecord followUpRecord) {
+    public Result<FollowUpRecord> add(@Valid @RequestBody FollowUpRecord followUpRecord) {
         return Result.success("添加成功", followUpRecordService.save(followUpRecord));
     }
 
     @PutMapping
-    public Result<FollowUpRecord> update(@RequestBody FollowUpRecord followUpRecord) {
+    public Result<FollowUpRecord> update(@Valid @RequestBody FollowUpRecord followUpRecord) {
         return Result.success("更新成功", followUpRecordService.update(followUpRecord));
     }
 
