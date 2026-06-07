@@ -12,10 +12,11 @@ spring:
     username: admin
     password: admin123
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 1
       connection-timeout: 60000
       idle-timeout: 600000
       max-lifetime: 1800000
+      transaction-isolation: TRANSACTION_SERIALIZABLE
   jpa:
     database-platform: org.sqlite.hibernate.dialect.SQLiteDialect
     hibernate:
@@ -27,6 +28,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        connection:
+          provider_disables_autocommit: false
   servlet:
     multipart:
       max-file-size: 50MB

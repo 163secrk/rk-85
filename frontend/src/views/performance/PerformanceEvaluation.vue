@@ -170,10 +170,23 @@ export default {
       return this.evaluateForm.id ? '重新评级' : '业绩评级'
     }
   },
+  watch: {
+    'evaluateForm.score': function(newScore) {
+      this.evaluateForm.grade = this.calculateGrade(newScore)
+    }
+  },
   mounted() {
     this.loadData()
   },
   methods: {
+    calculateGrade(score) {
+      const s = parseFloat(score) || 0
+      if (s >= 95) return 'S'
+      if (s >= 85) return 'A'
+      if (s >= 70) return 'B'
+      if (s >= 60) return 'C'
+      return 'D'
+    },
     getCurrentMonth() {
       const now = new Date()
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`

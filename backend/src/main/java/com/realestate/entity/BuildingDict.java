@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "building_dict")
 public class BuildingDict {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "楼盘名称不能为空")

@@ -247,7 +247,17 @@ export default {
     },
     async onBuildingChange(buildingId) {
       if (buildingId) {
-        const building = this.buildingOptions.find(b => b.id === buildingId)
+        let building = this.buildingOptions.find(b => b.id === buildingId)
+        if (!building) {
+          try {
+            const res = await this.$axios.get(`/building-dicts/${buildingId}`)
+            if (res.code === 200 && res.data) {
+              building = res.data
+            }
+          } catch (e) {
+            console.error('Failed to fetch building:', e)
+          }
+        }
         if (building) {
           this.selectedBuilding = building
           this.form.city = building.city
@@ -264,6 +274,8 @@ export default {
             this.form.supportingFacilities = building.supportingFacilities
           }
           this.$message.success('已自动填充楼盘信息')
+        } else {
+          this.$message.warning('未找到楼盘信息，请手动填写')
         }
       } else {
         this.selectedBuilding = null

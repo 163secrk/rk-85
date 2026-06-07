@@ -4,6 +4,7 @@ import com.realestate.entity.Contract;
 import com.realestate.entity.Subscription;
 import com.realestate.repository.ContractRepository;
 import com.realestate.repository.SubscriptionRepository;
+import org.hibernate.exception.LockAcquisitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +74,30 @@ public class ContractService {
 
     @Transactional
     public Contract createFromSubscription(Long subscriptionId) {
+        int maxRetries = 3;
+        int retryCount = 0;
+        long backoffMs = 500;
+
+        while (retryCount < maxRetries) {
+            try {
+                return doCreateFromSubscription(subscriptionId);
+            } catch (LockAcquisitionException e) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                    throw new RuntimeException("数据库繁忙，请稍后重试", e);
+                }
+                try {
+                    Thread.sleep(backoffMs * retryCount);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("操作被中断", ie);
+                }
+            }
+        }
+        throw new RuntimeException("创建合同失败，请稍后重试");
+    }
+
+    private Contract doCreateFromSubscription(Long subscriptionId) {
         Optional<Subscription> subscriptionOpt = subscriptionRepository.findById(subscriptionId);
         if (!subscriptionOpt.isPresent()) {
             throw new RuntimeException("认购记录不存在");

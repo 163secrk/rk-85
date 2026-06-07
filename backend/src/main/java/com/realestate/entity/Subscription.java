@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "subscription")
 public class Subscription {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String subscriptionNo;

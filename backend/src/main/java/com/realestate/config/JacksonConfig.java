@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,7 +31,7 @@ public class JacksonConfig {
             @Override
             public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
                 String text = parser.getText().trim();
-                if (text.isEmpty()) {
+                if (text.isEmpty() || "null".equalsIgnoreCase(text)) {
                     return null;
                 }
                 return super.deserialize(parser, context);
@@ -41,10 +42,70 @@ public class JacksonConfig {
             @Override
             public String deserialize(JsonParser parser, DeserializationContext context) throws IOException {
                 String text = parser.getText();
-                if (text == null || text.trim().isEmpty()) {
+                if (text == null || text.trim().isEmpty() || "null".equalsIgnoreCase(text)) {
                     return null;
                 }
                 return text.trim();
+            }
+        });
+
+        javaTimeModule.addDeserializer(Integer.class, new JsonDeserializer<Integer>() {
+            @Override
+            public Integer deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+                String text = parser.getText().trim();
+                if (text.isEmpty() || "null".equalsIgnoreCase(text)) {
+                    return null;
+                }
+                try {
+                    return Integer.parseInt(text);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        });
+
+        javaTimeModule.addDeserializer(Long.class, new JsonDeserializer<Long>() {
+            @Override
+            public Long deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+                String text = parser.getText().trim();
+                if (text.isEmpty() || "null".equalsIgnoreCase(text)) {
+                    return null;
+                }
+                try {
+                    return Long.parseLong(text);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        });
+
+        javaTimeModule.addDeserializer(BigDecimal.class, new JsonDeserializer<BigDecimal>() {
+            @Override
+            public BigDecimal deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+                String text = parser.getText().trim();
+                if (text.isEmpty() || "null".equalsIgnoreCase(text)) {
+                    return null;
+                }
+                try {
+                    return new BigDecimal(text);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        });
+
+        javaTimeModule.addDeserializer(int.class, new JsonDeserializer<Integer>() {
+            @Override
+            public Integer deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+                String text = parser.getText().trim();
+                if (text.isEmpty() || "null".equalsIgnoreCase(text)) {
+                    return 0;
+                }
+                try {
+                    return Integer.parseInt(text);
+                } catch (NumberFormatException e) {
+                    return 0;
+                }
             }
         });
 

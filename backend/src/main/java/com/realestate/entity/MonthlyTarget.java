@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "monthly_target")
 public class MonthlyTarget {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long agentId;

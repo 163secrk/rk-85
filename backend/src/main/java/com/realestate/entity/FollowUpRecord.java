@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "follow_up_record")
 public class FollowUpRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "客户不能为空")

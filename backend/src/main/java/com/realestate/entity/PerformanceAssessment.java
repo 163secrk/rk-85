@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "performance_assessment")
 public class PerformanceAssessment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long agentId;

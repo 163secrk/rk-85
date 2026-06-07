@@ -41,10 +41,18 @@ public class PerformanceAssessmentService {
     }
 
     public PerformanceAssessment save(PerformanceAssessment assessment) {
+        if (assessment.getScore() != null) {
+            String calculatedGrade = calculateGrade(assessment.getScore());
+            assessment.setGrade(calculatedGrade);
+        }
         return assessmentRepository.save(assessment);
     }
 
     public PerformanceAssessment update(PerformanceAssessment assessment) {
+        if (assessment.getScore() != null) {
+            String calculatedGrade = calculateGrade(assessment.getScore());
+            assessment.setGrade(calculatedGrade);
+        }
         return assessmentRepository.save(assessment);
     }
 
@@ -59,12 +67,39 @@ public class PerformanceAssessmentService {
             throw new RuntimeException("业绩记录不存在");
         }
         PerformanceAssessment assessment = opt.get();
+        
+        String calculatedGrade = calculateGrade(score);
+        
+        if (grade != null && !grade.equals(calculatedGrade)) {
+            throw new RuntimeException(
+                String.format("评分与评级不匹配：分数%.1f对应的评级应为%s，而不是%s。", 
+                    score, calculatedGrade, grade));
+        }
+        
         assessment.setScore(score);
-        assessment.setGrade(grade);
+        assessment.setGrade(calculatedGrade);
         assessment.setEvaluator(evaluator);
         assessment.setEvaluationRemark(evaluationRemark);
         assessment.setEvaluationTime(LocalDateTime.now());
         return assessmentRepository.save(assessment);
+    }
+
+    private String calculateGrade(BigDecimal score) {
+        if (score == null) {
+            return null;
+        }
+        int scoreInt = score.intValue();
+        if (scoreInt >= 95) {
+            return "S";
+        } else if (scoreInt >= 85) {
+            return "A";
+        } else if (scoreInt >= 70) {
+            return "B";
+        } else if (scoreInt >= 60) {
+            return "C";
+        } else {
+            return "D";
+        }
     }
 
     public PerformanceAssessment findOrCreateByAgentIdAndMonth(Long agentId, String agentName, String month) {

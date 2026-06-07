@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "agent")
 public class Agent {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "姓名不能为空")

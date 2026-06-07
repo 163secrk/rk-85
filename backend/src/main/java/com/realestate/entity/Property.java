@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "property")
 public class Property {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "房源名称不能为空")

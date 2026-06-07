@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "vr_panorama")
 public class VRPanorama {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long propertyId;
