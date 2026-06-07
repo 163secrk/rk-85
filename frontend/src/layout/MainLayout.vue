@@ -41,6 +41,10 @@
           <i class="el-icon-document"></i>
           <span slot="title">认购签约</span>
         </el-menu-item>
+        <el-menu-item index="/contracts">
+          <i class="el-icon-s-contract"></i>
+          <span slot="title">交易合同</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -95,9 +99,38 @@ export default {
         '/vr-panoramas': ['VR全景', '全景列表'],
         '/vr-panoramas/add': ['VR全景', '新增全景'],
         '/subscriptions': ['认购签约', '签约列表'],
-        '/subscriptions/add': ['认购签约', '新增签约']
+        '/subscriptions/add': ['认购签约', '新增签约'],
+        '/contracts': ['交易合同', '合同列表'],
+        '/contracts/add': ['交易合同', '新增合同']
       }
-      return breadcrumbMap[path] || ['首页']
+      if (breadcrumbMap[path]) {
+        return breadcrumbMap[path]
+      }
+      if (path.startsWith('/contracts/edit/')) {
+        return ['交易合同', '编辑合同']
+      }
+      if (path.startsWith('/contracts/detail/')) {
+        return ['交易合同', '合同详情']
+      }
+      if (path.startsWith('/customers/edit/') || path.startsWith('/customers/detail/')) {
+        return ['客户管理', '客户详情']
+      }
+      if (path.startsWith('/properties/edit/') || path.startsWith('/properties/detail/')) {
+        return ['房源管理', '房源详情']
+      }
+      if (path.startsWith('/subscriptions/edit/') || path.startsWith('/subscriptions/detail/')) {
+        return ['认购签约', '签约详情']
+      }
+      if (path.startsWith('/viewing-records/edit/')) {
+        return ['带看记录', '编辑记录']
+      }
+      if (path.startsWith('/vr-panoramas/edit/')) {
+        return ['VR全景', '编辑全景']
+      }
+      if (path.startsWith('/vr-panoramas/view/')) {
+        return ['VR全景', '全景播放']
+      }
+      return ['首页']
     }
   },
   methods: {

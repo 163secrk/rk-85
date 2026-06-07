@@ -159,6 +159,32 @@ const routes = [
         component: () => import('@/views/followup/FollowUpRecordForm.vue')
       }
     ]
+  },
+  {
+    path: '/contracts',
+    component: () => import('@/layout/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'ContractList',
+        component: () => import('@/views/contract/ContractList.vue')
+      },
+      {
+        path: 'add',
+        name: 'ContractAdd',
+        component: () => import('@/views/contract/ContractForm.vue')
+      },
+      {
+        path: 'edit/:id',
+        name: 'ContractEdit',
+        component: () => import('@/views/contract/ContractForm.vue')
+      },
+      {
+        path: 'detail/:id',
+        name: 'ContractDetail',
+        component: () => import('@/views/contract/ContractDetail.vue')
+      }
+    ]
   }
 ]
 
