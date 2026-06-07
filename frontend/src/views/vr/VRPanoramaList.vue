@@ -99,7 +99,11 @@ export default {
       }
     },
     async search() {
-      const res = await this.$axios.get('/vr-panoramas/search', { params: this.searchForm })
+      const params = {}
+      if (this.searchForm.propertyId) params.propertyId = this.searchForm.propertyId
+      if (this.searchForm.name && this.searchForm.name.trim()) params.name = this.searchForm.name.trim()
+      if (this.searchForm.status) params.status = this.searchForm.status
+      const res = await this.$axios.get('/vr-panoramas/search', { params })
       if (res.code === 200) {
         this.tableData = res.data
       }

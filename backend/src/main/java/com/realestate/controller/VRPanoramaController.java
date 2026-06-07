@@ -36,6 +36,8 @@ public class VRPanoramaController {
     public Result<List<VRPanorama>> search(@RequestParam(required = false) Long propertyId,
                                            @RequestParam(required = false) String name,
                                            @RequestParam(required = false) String status) {
+        name = (name != null && name.trim().isEmpty()) ? null : name;
+        status = (status != null && status.trim().isEmpty()) ? null : status;
         return Result.success(vrPanoramaService.search(propertyId, name, status));
     }
 

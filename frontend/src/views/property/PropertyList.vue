@@ -103,7 +103,14 @@ export default {
       }
     },
     async search() {
-      const res = await this.$axios.get('/properties/search', { params: this.searchForm })
+      const params = {}
+      if (this.searchForm.title && this.searchForm.title.trim()) params.title = this.searchForm.title.trim()
+      if (this.searchForm.status) params.status = this.searchForm.status
+      if (this.searchForm.type) params.type = this.searchForm.type
+      if (this.searchForm.district && this.searchForm.district.trim()) params.district = this.searchForm.district.trim()
+      if (this.searchForm.minPrice !== null) params.minPrice = this.searchForm.minPrice
+      if (this.searchForm.maxPrice !== null) params.maxPrice = this.searchForm.maxPrice
+      const res = await this.$axios.get('/properties/search', { params })
       if (res.code === 200) {
         this.tableData = res.data
       }

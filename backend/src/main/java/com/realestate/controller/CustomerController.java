@@ -34,6 +34,10 @@ public class CustomerController {
                                          @RequestParam(required = false) String phone,
                                          @RequestParam(required = false) String status,
                                          @RequestParam(required = false) String level) {
+        name = (name != null && name.trim().isEmpty()) ? null : name;
+        phone = (phone != null && phone.trim().isEmpty()) ? null : phone;
+        status = (status != null && status.trim().isEmpty()) ? null : status;
+        level = (level != null && level.trim().isEmpty()) ? null : level;
         return Result.success(customerService.search(name, phone, status, level));
     }
 

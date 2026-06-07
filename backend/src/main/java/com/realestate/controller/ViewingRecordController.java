@@ -41,12 +41,16 @@ public class ViewingRecordController {
 
     @GetMapping("/search")
     public Result<List<ViewingRecord>> search(@RequestParam(required = false) Long customerId,
+                                              @RequestParam(required = false) String customerName,
                                               @RequestParam(required = false) Long propertyId,
                                               @RequestParam(required = false) String agentName,
                                               @RequestParam(required = false) String status,
                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime) {
-        return Result.success(viewingRecordService.search(customerId, propertyId, agentName, status, startTime, endTime));
+        customerName = (customerName != null && customerName.trim().isEmpty()) ? null : customerName;
+        agentName = (agentName != null && agentName.trim().isEmpty()) ? null : agentName;
+        status = (status != null && status.trim().isEmpty()) ? null : status;
+        return Result.success(viewingRecordService.search(customerId, customerName, propertyId, agentName, status, startTime, endTime));
     }
 
     @PostMapping

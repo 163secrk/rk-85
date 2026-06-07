@@ -31,9 +31,9 @@ public class ViewingRecordService {
         return viewingRecordRepository.findByPropertyId(propertyId);
     }
 
-    public List<ViewingRecord> search(Long customerId, Long propertyId, String agentName,
+    public List<ViewingRecord> search(Long customerId, String customerName, Long propertyId, String agentName,
                                       String status, LocalDateTime startTime, LocalDateTime endTime) {
-        return viewingRecordRepository.findByConditions(customerId, propertyId, agentName, status, startTime, endTime);
+        return viewingRecordRepository.findByConditions(customerId, customerName, propertyId, agentName, status, startTime, endTime);
     }
 
     public ViewingRecord save(ViewingRecord viewingRecord) {

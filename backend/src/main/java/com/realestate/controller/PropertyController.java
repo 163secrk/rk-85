@@ -37,6 +37,11 @@ public class PropertyController {
                                          @RequestParam(required = false) String district,
                                          @RequestParam(required = false) BigDecimal minPrice,
                                          @RequestParam(required = false) BigDecimal maxPrice) {
+        title = (title != null && title.trim().isEmpty()) ? null : title;
+        status = (status != null && status.trim().isEmpty()) ? null : status;
+        type = (type != null && type.trim().isEmpty()) ? null : type;
+        city = (city != null && city.trim().isEmpty()) ? null : city;
+        district = (district != null && district.trim().isEmpty()) ? null : district;
         return Result.success(propertyService.search(title, status, type, city, district, minPrice, maxPrice));
     }
 

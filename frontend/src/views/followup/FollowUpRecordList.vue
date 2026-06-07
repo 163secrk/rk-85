@@ -94,7 +94,11 @@ export default {
       }
     },
     async search() {
-      const res = await this.$axios.get('/follow-up-records/search', { params: this.searchForm })
+      const params = {}
+      if (this.searchForm.customerId) params.customerId = this.searchForm.customerId
+      if (this.searchForm.agentName && this.searchForm.agentName.trim()) params.agentName = this.searchForm.agentName.trim()
+      if (this.searchForm.followType) params.followType = this.searchForm.followType
+      const res = await this.$axios.get('/follow-up-records/search', { params })
       if (res.code === 200) {
         this.tableData = res.data
       }

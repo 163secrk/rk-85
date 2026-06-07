@@ -21,12 +21,14 @@ public interface ViewingRecordRepository extends JpaRepository<ViewingRecord, Lo
     List<ViewingRecord> findByStatus(String status);
 
     @Query("SELECT v FROM ViewingRecord v WHERE (:customerId IS NULL OR v.customerId = :customerId) " +
+           "AND (:customerName IS NULL OR v.customerName LIKE %:customerName%) " +
            "AND (:propertyId IS NULL OR v.propertyId = :propertyId) " +
            "AND (:agentName IS NULL OR v.agentName LIKE %:agentName%) " +
            "AND (:status IS NULL OR v.status = :status) " +
            "AND (:startTime IS NULL OR v.viewingTime >= :startTime) " +
            "AND (:endTime IS NULL OR v.viewingTime <= :endTime)")
     List<ViewingRecord> findByConditions(@Param("customerId") Long customerId,
+                                         @Param("customerName") String customerName,
                                          @Param("propertyId") Long propertyId,
                                          @Param("agentName") String agentName,
                                          @Param("status") String status,

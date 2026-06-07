@@ -97,7 +97,12 @@ export default {
       }
     },
     async search() {
-      const res = await this.$axios.get('/customers/search', { params: this.searchForm })
+      const params = {}
+      if (this.searchForm.name && this.searchForm.name.trim()) params.name = this.searchForm.name.trim()
+      if (this.searchForm.phone && this.searchForm.phone.trim()) params.phone = this.searchForm.phone.trim()
+      if (this.searchForm.status) params.status = this.searchForm.status
+      if (this.searchForm.level) params.level = this.searchForm.level
+      const res = await this.$axios.get('/customers/search', { params })
       if (res.code === 200) {
         this.tableData = res.data
       }

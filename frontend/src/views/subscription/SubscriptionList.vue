@@ -105,12 +105,9 @@ export default {
       }
     },
     async search() {
-      const params = {
-        status: this.searchForm.status
-      }
-      if (this.searchForm.customerId) {
-        params.customerId = this.searchForm.customerId
-      }
+      const params = {}
+      if (this.searchForm.customerId) params.customerId = this.searchForm.customerId
+      if (this.searchForm.status) params.status = this.searchForm.status
       if (this.searchForm.dateRange && this.searchForm.dateRange.length === 2) {
         params.startDate = this.searchForm.dateRange[0]
         params.endDate = this.searchForm.dateRange[1]

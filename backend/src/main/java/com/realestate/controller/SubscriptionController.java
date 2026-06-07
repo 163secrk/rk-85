@@ -50,6 +50,7 @@ public class SubscriptionController {
                                              @RequestParam(required = false) String status,
                                              @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
                                              @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+        status = (status != null && status.trim().isEmpty()) ? null : status;
         return Result.success(subscriptionService.search(customerId, propertyId, status, startDate, endDate));
     }
 

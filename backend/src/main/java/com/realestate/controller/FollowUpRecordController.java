@@ -41,6 +41,8 @@ public class FollowUpRecordController {
                                                @RequestParam(required = false) String followType,
                                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
                                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime) {
+        agentName = (agentName != null && agentName.trim().isEmpty()) ? null : agentName;
+        followType = (followType != null && followType.trim().isEmpty()) ? null : followType;
         return Result.success(followUpRecordService.search(customerId, agentName, followType, startTime, endTime));
     }
 
