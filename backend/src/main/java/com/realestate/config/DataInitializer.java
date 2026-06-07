@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -32,6 +33,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private FollowUpRecordRepository followUpRecordRepository;
+
+    @Autowired
+    private AgentRepository agentRepository;
+
+    @Autowired
+    private MonthlyTargetRepository monthlyTargetRepository;
 
     @Override
     public void run(String... args) {
@@ -88,6 +95,22 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("跟进记录数据初始化完成，共插入 15 条");
             } else {
                 System.out.println("跟进记录数据已存在，跳过初始化，当前数量: " + followCount);
+            }
+
+            long agentCount = agentRepository.count();
+            if (agentCount == 0) {
+                initAgents();
+                System.out.println("经纪人数据初始化完成，共插入 6 条");
+            } else {
+                System.out.println("经纪人数据已存在，跳过初始化，当前数量: " + agentCount);
+            }
+
+            long targetCount = monthlyTargetRepository.count();
+            if (targetCount == 0) {
+                initMonthlyTargets();
+                System.out.println("月度目标数据初始化完成，共插入 6 条");
+            } else {
+                System.out.println("月度目标数据已存在，跳过初始化，当前数量: " + targetCount);
             }
 
             initialized = true;
@@ -263,6 +286,56 @@ public class DataInitializer implements CommandLineRunner {
             f.setStatus("已完成");
             f.setRemark("跟进备注" + (i + 1));
             followUpRecordRepository.save(f);
+        }
+    }
+
+    private void initAgents() {
+        String[] names = {"王经纪", "李经纪", "张经纪", "刘经纪", "陈经纪", "赵经纪"};
+        String[] phones = {"13900139001", "13900139002", "13900139003",
+                          "13900139004", "13900139005", "13900139006"};
+        String[] positions = {"资深经纪人", "高级经纪人", "经纪人",
+                              "经纪人", "高级经纪人", "资深经纪人"};
+        String[] departments = {"销售一部", "销售一部", "销售一部",
+                                "销售二部", "销售二部", "销售二部"};
+
+        for (int i = 0; i < 6; i++) {
+            Agent a = new Agent();
+            a.setName(names[i]);
+            a.setPhone(phones[i]);
+            a.setGender(i % 2 == 0 ? "男" : "女");
+            a.setIdCard("110101198" + i + "0101" + (2000 + i));
+            a.setPosition(positions[i]);
+            a.setDepartment(departments[i]);
+            a.setHireDate(LocalDateTime.now().plusMonths(-12 - i * 3));
+            a.setStatus("在职");
+            a.setRemark("经纪人备注信息" + (i + 1));
+            agentRepository.save(a);
+        }
+    }
+
+    private void initMonthlyTargets() {
+        String currentMonth = LocalDateTime.now().getYear() + "-" +
+                String.format("%02d", LocalDateTime.now().getMonthValue());
+        String lastMonth = LocalDateTime.now().plusMonths(-1).getYear() + "-" +
+                String.format("%02d", LocalDateTime.now().plusMonths(-1).getMonthValue());
+
+        List<Agent> agents = agentRepository.findAll();
+        int[] viewingTargets = {25, 20, 18, 22, 24, 28};
+        int[] dealTargets = {5, 4, 3, 4, 5, 6};
+        int[] amountTargets = {500, 400, 300, 400, 480, 600};
+        double[] rateTargets = {25.0, 22.0, 20.0, 22.0, 24.0, 26.0};
+
+        for (int i = 0; i < agents.size(); i++) {
+            Agent agent = agents.get(i);
+            MonthlyTarget t = new MonthlyTarget();
+            t.setAgentId(agent.getId());
+            t.setAgentName(agent.getName());
+            t.setMonth(currentMonth);
+            t.setViewingTarget(viewingTargets[i]);
+            t.setDealTarget(dealTargets[i]);
+            t.setDealAmountTarget(new BigDecimal(amountTargets[i]));
+            t.setConversionRateTarget(new BigDecimal(rateTargets[i]));
+            monthlyTargetRepository.save(t);
         }
     }
 }

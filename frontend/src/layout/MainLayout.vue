@@ -45,6 +45,28 @@
           <i class="el-icon-s-contract"></i>
           <span slot="title">交易合同</span>
         </el-menu-item>
+        <el-submenu index="/performance">
+          <template slot="title">
+            <i class="el-icon-s-marketing"></i>
+            <span>业绩考核</span>
+          </template>
+          <el-menu-item index="/performance/stats">
+            <i class="el-icon-s-data"></i>
+            <span slot="title">业绩统计</span>
+          </el-menu-item>
+          <el-menu-item index="/performance/targets">
+            <i class="el-icon-s-flag"></i>
+            <span slot="title">目标设置</span>
+          </el-menu-item>
+          <el-menu-item index="/performance/evaluation">
+            <i class="el-icon-s-check"></i>
+            <span slot="title">考核评级</span>
+          </el-menu-item>
+          <el-menu-item index="/performance/ranking">
+            <i class="el-icon-s-order"></i>
+            <span slot="title">业绩排名</span>
+          </el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>
@@ -129,6 +151,18 @@ export default {
       }
       if (path.startsWith('/vr-panoramas/view/')) {
         return ['VR全景', '全景播放']
+      }
+      if (path === '/performance/stats') {
+        return ['业绩考核', '业绩统计']
+      }
+      if (path === '/performance/targets') {
+        return ['业绩考核', '目标设置']
+      }
+      if (path === '/performance/evaluation') {
+        return ['业绩考核', '考核评级']
+      }
+      if (path === '/performance/ranking') {
+        return ['业绩考核', '业绩排名']
       }
       return ['首页']
     }

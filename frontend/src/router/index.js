@@ -185,6 +185,32 @@ const routes = [
         component: () => import('@/views/contract/ContractDetail.vue')
       }
     ]
+  },
+  {
+    path: '/performance',
+    component: () => import('@/layout/MainLayout.vue'),
+    children: [
+      {
+        path: 'stats',
+        name: 'PerformanceStats',
+        component: () => import('@/views/performance/PerformanceStats.vue')
+      },
+      {
+        path: 'targets',
+        name: 'MonthlyTargetSetting',
+        component: () => import('@/views/performance/MonthlyTargetSetting.vue')
+      },
+      {
+        path: 'evaluation',
+        name: 'PerformanceEvaluation',
+        component: () => import('@/views/performance/PerformanceEvaluation.vue')
+      },
+      {
+        path: 'ranking',
+        name: 'PerformanceRanking',
+        component: () => import('@/views/performance/PerformanceRanking.vue')
+      }
+    ]
   }
 ]
 
