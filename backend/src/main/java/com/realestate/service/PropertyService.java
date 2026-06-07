@@ -24,8 +24,9 @@ public class PropertyService {
     }
 
     public List<Property> search(String title, String status, String type, String city,
-                                 String district, BigDecimal minPrice, BigDecimal maxPrice) {
-        return propertyRepository.findByConditions(title, status, type, city, district, minPrice, maxPrice);
+                                 String district, BigDecimal minPrice, BigDecimal maxPrice,
+                                 Long buildingDictId) {
+        return propertyRepository.findByConditions(title, status, type, city, district, minPrice, maxPrice, buildingDictId);
     }
 
     public Property save(Property property) {
@@ -46,5 +47,28 @@ public class PropertyService {
 
     public List<Property> findByType(String type) {
         return propertyRepository.findByType(type);
+    }
+
+    public List<Property> findByBuildingDictId(Long buildingDictId) {
+        return propertyRepository.findByBuildingDictId(buildingDictId);
+    }
+
+    public List<Property> findByBuildingDictIdAndStatus(Long buildingDictId, String status) {
+        return propertyRepository.findByBuildingDictIdAndStatus(buildingDictId, status);
+    }
+
+    public BigDecimal calculateHistoricalAveragePrice(Long buildingDictId) {
+        BigDecimal avg = propertyRepository.calculateHistoricalAveragePrice(buildingDictId);
+        return avg != null ? avg : BigDecimal.ZERO;
+    }
+
+    public BigDecimal calculateCurrentAveragePrice(Long buildingDictId) {
+        BigDecimal avg = propertyRepository.calculateCurrentAveragePrice(buildingDictId);
+        return avg != null ? avg : BigDecimal.ZERO;
+    }
+
+    public Long countByBuildingDictIdAndStatus(Long buildingDictId, String status) {
+        Long count = propertyRepository.countByBuildingDictIdAndStatus(buildingDictId, status);
+        return count != null ? count : 0L;
     }
 }

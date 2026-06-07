@@ -8,6 +8,34 @@
     <div class="form-container">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="所属楼盘" prop="buildingDictId">
+              <el-select
+                v-model="form.buildingDictId"
+                placeholder="请选择所属楼盘（可选）"
+                filterable
+                remote
+                clearable
+                :remote-method="remoteSearchBuilding"
+                :loading="buildingLoading"
+                style="width: 100%"
+                @change="onBuildingChange">
+                <el-option
+                  v-for="item in buildingOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                  <span style="float: left;">{{ item.name }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px;">{{ item.district }} - {{ item.address }}</span>
+                </el-option>
+              </el-select>
+              <div v-if="form.buildingName" style="margin-top: 5px; color: #409EFF; font-size: 12px;">
+                <i class="el-icon-info"></i> 已选择楼盘：{{ form.buildingName }}，城市、区域、地址已自动填充
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="房源编号" prop="propertyNo">
               <el-input v-model="form.propertyNo" placeholder="请输入房源编号"></el-input>
@@ -143,6 +171,9 @@ export default {
     return {
       isEdit: false,
       submitting: false,
+      buildingLoading: false,
+      buildingOptions: [],
+      selectedBuilding: null,
       form: {
         id: null,
         title: '',
@@ -167,7 +198,9 @@ export default {
         features: '',
         supportingFacilities: '',
         status: '在售',
-        imageUrl: ''
+        imageUrl: '',
+        buildingDictId: null,
+        buildingName: ''
       },
       rules: {
         title: [{ required: true, message: '请输入房源名称', trigger: 'blur' }],
@@ -197,10 +230,57 @@ export default {
     }
   },
   methods: {
+    async remoteSearchBuilding(query) {
+      if (query && query.trim()) {
+        this.buildingLoading = true
+        try {
+          const res = await this.$axios.get('/building-dicts/search', { params: { name: query } })
+          if (res.code === 200) {
+            this.buildingOptions = res.data
+          }
+        } finally {
+          this.buildingLoading = false
+        }
+      } else {
+        this.buildingOptions = []
+      }
+    },
+    async onBuildingChange(buildingId) {
+      if (buildingId) {
+        const building = this.buildingOptions.find(b => b.id === buildingId)
+        if (building) {
+          this.selectedBuilding = building
+          this.form.city = building.city
+          this.form.district = building.district
+          this.form.address = building.address
+          this.form.buildingName = building.name
+          if (building.buildingType) {
+            this.form.buildingType = building.buildingType
+          }
+          if (building.buildingYear) {
+            this.form.buildingYear = building.buildingYear
+          }
+          if (building.supportingFacilities) {
+            this.form.supportingFacilities = building.supportingFacilities
+          }
+          this.$message.success('已自动填充楼盘信息')
+        }
+      } else {
+        this.selectedBuilding = null
+        this.form.buildingName = ''
+      }
+    },
     async loadDetail(id) {
       const res = await this.$axios.get(`/properties/${id}`)
       if (res.code === 200) {
         this.form = { ...this.form, ...res.data }
+        if (this.form.buildingDictId) {
+          const buildingRes = await this.$axios.get(`/building-dicts/${this.form.buildingDictId}`)
+          if (buildingRes.code === 200) {
+            this.buildingOptions = [buildingRes.data]
+            this.selectedBuilding = buildingRes.data
+          }
+        }
       }
     },
     handleSubmit() {

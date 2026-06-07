@@ -10,6 +10,21 @@
         <el-form-item label="房源名称">
           <el-input v-model="searchForm.title" placeholder="请输入房源名称" clearable></el-input>
         </el-form-item>
+        <el-form-item label="所属楼盘">
+          <el-select
+            v-model="searchForm.buildingDictId"
+            placeholder="请选择楼盘"
+            filterable
+            clearable
+            style="width: 200px;">
+            <el-option
+              v-for="item in buildingList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="searchForm.status" placeholder="请选择状态" clearable>
             <el-option label="在售" value="在售"></el-option>
@@ -57,6 +72,17 @@
             <span class="text-danger font-bold">{{ scope.row.price }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="所属楼盘" width="120">
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.buildingDictId"
+              class="building-link"
+              @click="goToBuildingDetail(scope.row.buildingDictId)">
+              {{ scope.row.buildingName || '查看楼盘' }}
+            </span>
+            <span v-else class="text-muted">-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="district" label="区域" width="80"></el-table-column>
         <el-table-column prop="status" label="状态" width="70">
           <template slot-scope="scope">
@@ -82,8 +108,10 @@ export default {
   data() {
     return {
       tableData: [],
+      buildingList: [],
       searchForm: {
         title: '',
+        buildingDictId: null,
         status: '',
         type: '',
         district: '',
@@ -94,8 +122,15 @@ export default {
   },
   mounted() {
     this.loadData()
+    this.loadBuildingList()
   },
   methods: {
+    async loadBuildingList() {
+      const res = await this.$axios.get('/building-dicts')
+      if (res.code === 200) {
+        this.buildingList = res.data
+      }
+    },
     async loadData() {
       const res = await this.$axios.get('/properties')
       if (res.code === 200) {
@@ -105,6 +140,7 @@ export default {
     async search() {
       const params = {}
       if (this.searchForm.title && this.searchForm.title.trim()) params.title = this.searchForm.title.trim()
+      if (this.searchForm.buildingDictId) params.buildingDictId = this.searchForm.buildingDictId
       if (this.searchForm.status) params.status = this.searchForm.status
       if (this.searchForm.type) params.type = this.searchForm.type
       if (this.searchForm.district && this.searchForm.district.trim()) params.district = this.searchForm.district.trim()
@@ -118,6 +154,7 @@ export default {
     reset() {
       this.searchForm = {
         title: '',
+        buildingDictId: null,
         status: '',
         type: '',
         district: '',
@@ -125,6 +162,9 @@ export default {
         maxPrice: null
       }
       this.loadData()
+    },
+    goToBuildingDetail(id) {
+      this.$router.push(`/building-dicts/detail/${id}`)
     },
     goToAdd() {
       this.$router.push('/properties/add')
@@ -160,5 +200,16 @@ export default {
 <style scoped>
 .font-bold {
   font-weight: bold;
+}
+.building-link {
+  color: #409EFF;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.building-link:hover {
+  color: #66b1ff;
+}
+.text-muted {
+  color: #909399;
 }
 </style>

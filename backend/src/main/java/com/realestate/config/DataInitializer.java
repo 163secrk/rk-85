@@ -40,6 +40,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private MonthlyTargetRepository monthlyTargetRepository;
 
+    @Autowired
+    private BuildingDictRepository buildingDictRepository;
+
     @Override
     public void run(String... args) {
         if (initialized) {
@@ -57,9 +60,19 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("客户数据已存在，跳过初始化，当前数量: " + customerCount);
             }
 
+            long buildingCount = buildingDictRepository.count();
+            List<BuildingDict> buildingList = null;
+            if (buildingCount == 0) {
+                buildingList = initBuildings();
+                System.out.println("楼盘数据初始化完成，共插入 " + buildingList.size() + " 条");
+            } else {
+                buildingList = buildingDictRepository.findAll();
+                System.out.println("楼盘数据已存在，跳过初始化，当前数量: " + buildingCount);
+            }
+
             long propertyCount = propertyRepository.count();
             if (propertyCount == 0) {
-                initProperties();
+                initProperties(buildingList);
                 System.out.println("房源数据初始化完成，共插入 8 条");
             } else {
                 System.out.println("房源数据已存在，跳过初始化，当前数量: " + propertyCount);
@@ -148,7 +161,7 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    private void initProperties() {
+    private void initProperties(List<BuildingDict> buildingList) {
         String[] titles = {"朝阳公园旁精装三居", "国贸CBD豪华公寓", "望京SOHO精品两居", "海淀学区房三居",
                           "通州地铁口新房", "亦庄开发区精装四居", "昌平别墅区独栋", "石景山刚需两居"};
         String[] types = {"住宅", "公寓", "住宅", "住宅", "住宅", "住宅", "别墅", "住宅"};
@@ -160,6 +173,9 @@ public class DataInitializer implements CommandLineRunner {
         int[] prices = {680, 1200, 450, 850, 320, 520, 1500, 280};
         int[] rooms = {3, 2, 2, 3, 2, 4, 5, 2};
         int[] halls = {2, 2, 1, 2, 1, 2, 3, 1};
+        Long[] buildingIds = {1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L};
+        String[] buildingNames = {"朝阳公园花园", "国贸中心公寓", "望京新城", "海淀学府花园",
+                                  "通州新华家园", "亦庄林语墅", "昌平龙城花园", "石景山古城花园"};
 
         for (int i = 0; i < 8; i++) {
             Property p = new Property();
@@ -186,6 +202,13 @@ public class DataInitializer implements CommandLineRunner {
             p.setSupportingFacilities("学校,医院,超市,公园");
             p.setStatus(i < 6 ? "在售" : "已售");
             p.setImageUrl("https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20luxury%20apartment%20building%20exterior&image_size=square");
+            if (buildingList != null && i < buildingList.size()) {
+                p.setBuildingDictId(buildingList.get(i).getId());
+                p.setBuildingName(buildingList.get(i).getName());
+            } else {
+                p.setBuildingDictId(buildingIds[i]);
+                p.setBuildingName(buildingNames[i]);
+            }
             propertyRepository.save(p);
         }
     }
@@ -337,5 +360,60 @@ public class DataInitializer implements CommandLineRunner {
             t.setConversionRateTarget(new BigDecimal(rateTargets[i]));
             monthlyTargetRepository.save(t);
         }
+    }
+
+    private List<BuildingDict> initBuildings() {
+        String[] names = {"朝阳公园花园", "国贸中心公寓", "望京新城", "海淀学府花园",
+                         "通州新华家园", "亦庄林语墅", "昌平龙城花园", "石景山古城花园"};
+        String[] cities = {"北京", "北京", "北京", "北京", "北京", "北京", "北京", "北京"};
+        String[] districts = {"朝阳区", "朝阳区", "朝阳区", "海淀区", "通州区", "大兴区", "昌平区", "石景山区"};
+        String[] addresses = {"朝阳区朝阳公园南路1号", "朝阳区建国门外大街1号", "朝阳区望京街9号",
+                             "海淀区中关村大街1号", "通州区新华大街1号", "大兴区亦庄荣华路1号",
+                             "昌平区回龙观别墅区1号", "石景山区古城大街1号"};
+        String[] buildingTypes = {"板楼", "塔楼", "板塔结合", "板楼", "板楼", "板楼", "别墅", "板楼"};
+        String[] buildingYears = {"2010", "2015", "2012", "2008", "2018", "2016", "2005", "2013"};
+        String[] developers = {"万科地产", "万达集团", "保利地产", "中海地产",
+                              "华润置地", "龙湖地产", "融创中国", "绿地集团"};
+        String[] propertyCompanies = {"万科物业", "万达物业", "保利物业", "中海物业",
+                                     "华润物业", "龙湖物业", "融创物业", "绿地物业"};
+        String[] totalHouses = {"1200", "800", "1500", "900", "2000", "600", "300", "1000"};
+        String[] plotRatios = {"2.5", "3.2", "2.8", "2.2", "3.0", "1.8", "0.8", "2.6"};
+        String[] greeningRates = {"35%", "30%", "40%", "38%", "32%", "45%", "50%", "33%"};
+        String[] parkingSpaces = {"1:1.2", "1:1", "1:1.5", "1:1.1", "1:1.3", "1:2", "1:2", "1:1"};
+        String[][] facilities = {
+            {"学校", "医院", "超市", "公园", "地铁"},
+            {"商场", "写字楼", "酒店", "地铁", "超市"},
+            {"学校", "地铁", "商场", "公园", "医院"},
+            {"学校", "医院", "图书馆", "地铁", "公园"},
+            {"地铁", "超市", "学校", "医院", "公园"},
+            {"学校", "医院", "商场", "公园", "高尔夫"},
+            {"会所", "泳池", "网球场", "公园", "学校"},
+            {"地铁", "超市", "学校", "医院", "公园"}
+        };
+        String[] averagePrices = {"68000", "120000", "58000", "85000", "42000", "52000", "68000", "38000"};
+
+        List<BuildingDict> buildingList = new java.util.ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            BuildingDict b = new BuildingDict();
+            b.setName(names[i]);
+            b.setCity(cities[i]);
+            b.setDistrict(districts[i]);
+            b.setAddress(addresses[i]);
+            b.setBuildingType(buildingTypes[i]);
+            b.setBuildingYear(buildingYears[i]);
+            b.setDeveloper(developers[i]);
+            b.setPropertyCompany(propertyCompanies[i]);
+            b.setTotalHouses(totalHouses[i]);
+            b.setPlotRatio(plotRatios[i]);
+            b.setGreeningRate(greeningRates[i]);
+            b.setParkingSpace(parkingSpaces[i]);
+            b.setSupportingFacilities(String.join(",", facilities[i]));
+            b.setDescription(names[i] + "位于" + districts[i] + "核心地段，交通便利，配套完善，是理想的居住选择。");
+            b.setAveragePrice(averagePrices[i]);
+            b.setImageUrl("https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20luxury%20residential%20building%20complex&image_size=square_hd");
+            buildingDictRepository.save(b);
+            buildingList.add(b);
+        }
+        return buildingList;
     }
 }

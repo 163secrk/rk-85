@@ -79,6 +79,10 @@ public class Property {
     @NotBlank(message = "状态不能为空")
     private String status;
 
+    private Long buildingDictId;
+
+    private String buildingName;
+
     private String imageUrl;
 
     private String images;

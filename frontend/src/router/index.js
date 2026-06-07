@@ -72,6 +72,32 @@ const routes = [
     ]
   },
   {
+    path: '/building-dicts',
+    component: () => import('@/layout/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'BuildingDictList',
+        component: () => import('@/views/building/BuildingDictList.vue')
+      },
+      {
+        path: 'add',
+        name: 'BuildingDictAdd',
+        component: () => import('@/views/building/BuildingDictForm.vue')
+      },
+      {
+        path: 'edit/:id',
+        name: 'BuildingDictEdit',
+        component: () => import('@/views/building/BuildingDictForm.vue')
+      },
+      {
+        path: 'detail/:id',
+        name: 'BuildingDictDetail',
+        component: () => import('@/views/building/BuildingDictDetail.vue')
+      }
+    ]
+  },
+  {
     path: '/viewing-records',
     component: () => import('@/layout/MainLayout.vue'),
     children: [

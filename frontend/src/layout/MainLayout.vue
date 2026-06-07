@@ -25,6 +25,10 @@
           <i class="el-icon-house"></i>
           <span slot="title">房源管理</span>
         </el-menu-item>
+        <el-menu-item index="/building-dicts">
+          <i class="el-icon-office-building"></i>
+          <span slot="title">楼盘字典</span>
+        </el-menu-item>
         <el-menu-item index="/viewing-records">
           <i class="el-icon-date"></i>
           <span slot="title">带看记录</span>
@@ -114,6 +118,8 @@ export default {
         '/customers/add': ['客户管理', '新增客户'],
         '/properties': ['房源管理', '房源列表'],
         '/properties/add': ['房源管理', '新增房源'],
+        '/building-dicts': ['楼盘字典', '楼盘列表'],
+        '/building-dicts/add': ['楼盘字典', '新增楼盘'],
         '/viewing-records': ['带看记录', '记录列表'],
         '/viewing-records/add': ['带看记录', '新增记录'],
         '/follow-up-records': ['跟进记录', '记录列表'],
@@ -139,6 +145,12 @@ export default {
       }
       if (path.startsWith('/properties/edit/') || path.startsWith('/properties/detail/')) {
         return ['房源管理', '房源详情']
+      }
+      if (path.startsWith('/building-dicts/edit/')) {
+        return ['楼盘字典', '编辑楼盘']
+      }
+      if (path.startsWith('/building-dicts/detail/')) {
+        return ['楼盘字典', '楼盘详情']
       }
       if (path.startsWith('/subscriptions/edit/') || path.startsWith('/subscriptions/detail/')) {
         return ['认购签约', '签约详情']
